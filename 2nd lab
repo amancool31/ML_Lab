@@ -1,0 +1,33 @@
+import numpy as np
+
+a=int(input("Enter 1st dim"))
+b=int(input("Enter 2nd dim"))
+mat=abs(np.random.randn(a,b)*255)
+mat
+///////////////////////////////////////////////
+x1=int(input("x cor."))
+y1=int(input("y cor."))
+o=int(input("reshape dim 1-"))
+p=int(input("reshape dim 2-"))
+
+j=[]
+for x in range(x1,x1+o):
+    t=[]
+    for y in range(y1,y1+p):
+        t.append(mat[x][y])
+    j.append(t)
+np.array(j)
+
+///////////////////////////////////////
+from PIL import Image
+import requests
+from io import BytesIO
+url="https://www.gettyimages.in/gi-resources/images/500px/983794168.jpg"
+response = requests.get(url)
+img = Image.open(BytesIO(response.content))
+///////////////////////////////////////////////
+
+image = img.convert('1', dither=Image.NONE) ///// Black and white image
+
+////////////////////////////////////////////////
+i=np.array(image,ndmin=2,dtype=int)
