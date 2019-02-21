@@ -1,0 +1,83 @@
+import pandas as pd
+import numpy as np
+import math
+dataset=pd.read_csv("Book1.csv",names=['Day','Outlook','Temperature','Humidity','Wind','Decision'])
+temp=dataset
+x,counts=np.unique(dataset.iloc[:,5],return_counts=True)
+p1=counts[0]/(counts[0]+counts[1])
+p2=counts[1]/(counts[0]+counts[1])
+entropy=-p1*math.log(p1,2)-p2*math.log(p2,2)
+gain=0
+gainList=[]
+gainIndex=0
+Xdata=dataset.iloc[:,1:5]
+temp=Xdata
+Ydata=dataset.iloc[:,5]
+for i in range(0,len(temp.columns)):
+    
+    x=temp.iloc[:,i]
+    unList,counts=np.unique(temp.iloc[:,i],return_counts=True)
+    #print(unList)
+    #print(counts)
+    
+    midGain=0
+    for j in range(unList.size):
+        pos=0
+        neg=0
+        
+        for k in range(x.size):
+            if(x[k]==unList[j] and dataset.iloc[:,5][k]=='Yes'):
+                pos=pos+1
+            elif(x[k]==unList[j] and dataset.iloc[:,5][k]=='No'):
+                neg=neg+1
+        #print('{} pos = {} and neg= {}'.format(unList[j],pos,neg))
+        p3=pos/(neg+pos)
+        p4=neg/(neg+pos)
+        if(p3!=0 and p4!=0):
+            midGain=midGain+(-p3*math.log(p3,2)-p4*math.log(p4,2))*(counts[j]/14)
+        elif(p3!=0 and p4==0):
+            midGain=midGain+(-p3*math.log(p3,2))*(counts[j]/14)
+        elif(p4!=0 and p3==0):
+            midGain=midGain+(-p4*math.log(p4,2))*(counts[j]/14)
+    midGain=entropy-midGain
+    #gainList.append([i,midGain])
+    #print(gainList)
+    if(gain<midGain):
+        gain=midGain
+        gainIndex=i
+print('current gain = {} gainIndex {} '.format(gain,gainIndex) )
+print('Question is {}'.format(temp.columns[gainIndex]))
+#temp.drop(columns=temp.columns[gainIndex])
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+O=np.array([0,0,1,2,2,2,1,0,0,2,0,1,1,2])
+T=np.array([0,0,0,1,2,2,2,1,2,1,1,1,0,1])
+H=np.array([1,1,1,1,0,0,0,1,0,0,0,1,0,1])
+W=np.array([0,1,0,0,0,1,1,0,0,0,1,1,0,1])
+Y=np.array([0,0,1,1,1,0,1,0,1,1,1,1,1,0])
+
+
+yc=np.count_nonzero(np.unique(Y))
+l=len(Y)
+no=np.count_nonzero(Y==0)
+yes=np.count_nonzero(Y==1)
+
+entr=-((no/l)*m.log(no/l,2)+(yes/l)*m.log(yes/l,2))
+
+print(entr)
+
+def partition(a):
+    c=np.unique(a)
+    l=[]
+    lofl=[]
+    for i in range(0,len(c)+1):
+        for j in range(0,len(a)):
+            if(a[j]==i):
+               l.append(j) 
+        lofl.append(l)
+        l=[]
